@@ -1,0 +1,21 @@
+{
+  "environments": {
+    "mobile": {
+      "type": "android",
+      "appPath": "/home/segilmez/Workspace/tosla-debug.apk",
+      "appPackage": "com.akode.tosla.debug",
+      "appActivity": "com.valensas.tosla.modules.auth.landing.splash.SplashActivity",
+      "testaiConfidenceThreshold": 0.2,
+      "imageMatchThreshold": 0.2,
+      "elementTimeout": 15,
+      "devices": [
+        {
+          "name": "device_1",
+          "appiumURL": "http://127.0.0.1:4723/wd/hub",
+          "udid": "30a0da3e",
+          "platformVersion": 7.1
+        }
+      ]
+    }
+  }
+}
