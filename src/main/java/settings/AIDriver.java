@@ -53,7 +53,7 @@ public class AIDriver {
         capabilities.setCapability("appActivity", environment.appActivity);
         capabilities.setCapability("noReset", true);
         capabilities.setCapability("testaiConfidenceThreshold", environment.testaiConfidenceThreshold);
-        if (environment.appPath != null)
+        if (environment.appPath != null && environment.appPath.equals(""))
             capabilities.setCapability("app", environment.appPath);
         HashMap<String, String> customFindModules = new HashMap<>();
         customFindModules.put("ai", "test-ai-classifier");
@@ -63,13 +63,16 @@ public class AIDriver {
         androidDriver = new AndroidDriver(url, capabilities);
         androidDriver.manage().timeouts().implicitlyWait(environment.elementTimeout, TimeUnit.SECONDS);
         androidDriver.setSetting(Setting.IMAGE_MATCH_THRESHOLD, environment.imageMatchThreshold);
+        androidDriver.setSetting(Setting.FIX_IMAGE_TEMPLATE_SIZE, false);
+        androidDriver.setSetting(Setting.UPDATE_IMAGE_ELEMENT_POSITION, true);
+        androidDriver.setSetting(Setting.FIX_IMAGE_FIND_SCREENSHOT_DIMENSIONS, false);
     }
 
     private Environment getEnvironment() {
         JsonObject settings;
         Environment environment = null;
         try {
-            FileReader fileReader = new FileReader("settings.json");
+            FileReader fileReader = new FileReader("ai-config/settings.json");
             Gson gson = new Gson();
             settings = JsonParser.parseReader(fileReader).getAsJsonObject();
             environment = gson.fromJson(settings.getAsJsonObject("environments").get("mobile"), Environment.class);
