@@ -37,7 +37,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 }
 
 artifacts {
-    archives jar
+    //archives jar
     archives sourceJar
     archives javadocJar
 }
@@ -123,15 +123,15 @@ def customizePom(pom) {
                 system 'GitHub'
                 url 'https://github.com/SahinEgilmez/bdd.ai/issues'
             }
-            /**
+
             licenses {
                 license {
                     name 'Apache License 2.0'
-                    url 'https://github.com/mautini/schemaorg-java/blob/master/LICENSE'
+                    url 'https://github.com/SahinEgilmez/bdd.ai/blob/master/LICENSE'
                     distribution 'repo'
                 }
             }
-            **/
+
             scm {
                 url 'https://github.com/SahinEgilmez/bdd.ai'
                 connection 'scm:git:git://github.com/SahinEgilmez/bdd.ai.git'
