@@ -2,11 +2,6 @@ package steps;
 
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.Setting;
-import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.android.AndroidElement;
-import io.cucumber.java.After;
-import io.cucumber.java.Before;
-import io.cucumber.java.en.When;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
@@ -19,9 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
-import java.sql.SQLOutput;
 import java.util.Base64;
-import java.util.List;
 import java.util.logging.Logger;
 
 /**

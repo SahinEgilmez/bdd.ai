@@ -1,26 +1,12 @@
 package steps;
 
-import io.appium.java_client.*;
-import io.appium.java_client.touch.WaitOptions;
-import io.appium.java_client.touch.offset.PointOption;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.When;
-import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.*;
 import settings.AIDriver;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.file.Files;
-import java.util.Base64;
-import java.util.logging.Logger;
-
-import static java.time.Duration.ofMillis;
-import static java.time.Duration.parse;
 
 /**
  * @author segilmez: Sahin Egilmez

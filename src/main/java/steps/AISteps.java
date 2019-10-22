@@ -1,14 +1,9 @@
 package steps;
 
-import io.appium.java_client.*;
-import io.appium.java_client.android.AndroidDriver;
-import io.cucumber.java.After;
-import io.cucumber.java.Before;
-import io.cucumber.java.en.When;
-import org.openqa.selenium.*;
+import io.appium.java_client.MobileElement;
+import org.openqa.selenium.NotFoundException;
 import settings.AIDriver;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.logging.Logger;
 

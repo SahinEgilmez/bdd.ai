@@ -1,10 +1,8 @@
 package steps;
 
 import io.appium.java_client.TouchAction;
-import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.touch.WaitOptions;
 import io.appium.java_client.touch.offset.PointOption;
-import io.cucumber.java.en.When;
 import org.openqa.selenium.Dimension;
 import settings.AIDriver;
 
