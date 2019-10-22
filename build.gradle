@@ -5,11 +5,12 @@ plugins {
 }
 
 group 'io.github.sahinegilmez'
-version = '0.1.0'
+version = '0.1.1'
 sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
@@ -52,7 +53,7 @@ publishing {
             customizePom(pom)
             groupId 'io.github.sahinegilmez'
             artifactId 'bdd.ai'
-            version '0.1.0'
+            version version
 
             from components.java
 

@@ -18,8 +18,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 public class AIDriver {
+    private Logger LOGGER = Logger.getLogger(AIDriver.class.getName());
     private AppiumDriver appiumDriver = null;
     public AndroidDriver androidDriver = null;
     private IOSDriver iosDriver = null;
@@ -30,7 +32,7 @@ public class AIDriver {
         if (environment.type.toLowerCase().equals("android")) {
             androidInitializer(environment, 0);
         } else {
-            System.out.println("Currently developed only for Android.");
+            LOGGER.warning("Currently developed only for Android.");
             throw new NotImplementedException();
         }
     }
@@ -43,9 +45,10 @@ public class AIDriver {
     }
 
     private void androidInitializer(Environment environment, int deviceNo) throws MalformedURLException {
+        LOGGER.info("ANDROID INIT");
         JsonObject device = environment.devices.get(deviceNo).getAsJsonObject();
         DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setCapability("name", "Test Automation");
+        capabilities.setCapability("name", "BDD Test Automation");
         capabilities.setCapability("automationName", "uiautomator2");
         capabilities.setCapability("platformName", "android");
         capabilities.setCapability("deviceName", device.get("udid").getAsString());
@@ -59,8 +62,8 @@ public class AIDriver {
         customFindModules.put("ai", "test-ai-classifier");
         capabilities.setCapability("customFindModules", customFindModules);
         capabilities.setCapability("shouldUseCompactResponses", false);
-        URL url = new URL(device.get("appiumURL").getAsString());
-        androidDriver = new AndroidDriver(url, capabilities);
+        URL appiumUrl = new URL(device.get("appiumURL").getAsString());
+        androidDriver = new AndroidDriver(appiumUrl, capabilities);
         androidDriver.manage().timeouts().implicitlyWait(environment.elementTimeout, TimeUnit.SECONDS);
         androidDriver.setSetting(Setting.IMAGE_MATCH_THRESHOLD, environment.imageMatchThreshold);
         androidDriver.setSetting(Setting.FIX_IMAGE_TEMPLATE_SIZE, false);
@@ -77,7 +80,7 @@ public class AIDriver {
             settings = JsonParser.parseReader(fileReader).getAsJsonObject();
             environment = gson.fromJson(settings.getAsJsonObject("environments").get("mobile"), Environment.class);
         } catch (FileNotFoundException e) {
-            System.out.println("Not found settings file:" + e);
+            LOGGER.warning("Not found settings file:" + e);
         }
         return environment;
     }
@@ -85,20 +88,28 @@ public class AIDriver {
     /**
      * Run before each test
      */
-    @Before
     public void setUp() throws MalformedURLException {
-        if (androidDriver.getSessionId() == null){
-            androidInitializer(getEnvironment(),0);
-        }
+        LOGGER.info("setUp");
+        if (androidDriver == null)
+            androidInitializer(getEnvironment(), 0);
     }
 
     /**
      * Run after each test *
      */
-    @After
     public void tearDown() {
-        if (appiumDriver != null) appiumDriver.quit();
-        if (androidDriver != null) androidDriver.quit();
-        if (iosDriver != null) iosDriver.quit();
+        LOGGER.info("tearDown");
+        if (appiumDriver != null) {
+            appiumDriver.quit();
+            appiumDriver = null;
+        }
+        if (androidDriver != null) {
+            androidDriver.quit();
+            androidDriver = null;
+        }
+        if (iosDriver != null) {
+            iosDriver.quit();
+            iosDriver = null;
+        }
     }
 }

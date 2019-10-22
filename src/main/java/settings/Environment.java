@@ -7,8 +7,8 @@ public class Environment {
     String appPath;
     String appPackage;
     String appActivity;
-    Integer testaiConfidenceThreshold;
-    Integer imageMatchThreshold;
+    Double testaiConfidenceThreshold;
+    Double imageMatchThreshold;
     Integer elementTimeout;
     Double platformVersion;
     JsonArray devices;

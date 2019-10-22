@@ -10,38 +10,26 @@ import settings.AIDriver;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.logging.Logger;
 
 /**
  * @author segilmez: Sahin Egilmez
  */
 public class AISteps {
+    private Logger LOGGER = Logger.getLogger(AISteps.class.getName());
     public AIDriver aiDriver;
-    public AndroidDriver androidDriver;
 
     public AISteps() throws MalformedURLException {
         aiDriver = AIDriver.getInstance();
-        androidDriver = aiDriver.androidDriver;
     }
 
-    @When("^(?:I will )?click ai:(\\w+(?: \\w+)*)$")
     public void clickByAI(String elementKey) {
-        androidDriver.findElement("-custom", "ai:" + elementKey).click();
+        aiDriver.androidDriver.findElement("-custom", "ai:" + elementKey).click();
     }
 
-    @When("^(?:I will )?see ai:(\\w+(?: \\w+)*)$")
     public void seeByAI(String elementKey) {
-        MobileElement elem = (MobileElement) androidDriver.findElementByCustom("ai:" + elementKey);
+        MobileElement elem = (MobileElement) aiDriver.androidDriver.findElementByCustom("ai:" + elementKey);
         if (elem == null)
             throw new NotFoundException("Not found exception:" + "ai:" + elementKey);
-    }
-
-    @Before
-    public void setUp() throws MalformedURLException {
-        aiDriver.setUp();
-    }
-
-    @After
-    public void tearDown() {
-        aiDriver.tearDown();
     }
 }

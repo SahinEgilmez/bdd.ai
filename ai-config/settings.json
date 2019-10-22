@@ -5,7 +5,7 @@
       "appPath": "/home/segilmez/Workspace/tosla-debug.apk",
       "appPackage": "com.akode.tosla.debug",
       "appActivity": "com.valensas.tosla.modules.auth.landing.splash.SplashActivity",
-      "testaiConfidenceThreshold": 0.2,
+      "testaiConfidenceThreshold": 0.5,
       "imageMatchThreshold": 0.5,
       "elementTimeout": 10,
       "devices": [
