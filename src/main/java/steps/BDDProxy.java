@@ -1,5 +1,6 @@
 package steps;
 
+
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.When;
@@ -40,6 +41,11 @@ public class BDDProxy {
     @When("^(?:I will )?click ((?:\"[^\"]*\")+)$")
     public void clickByText(String text) {
         commonSteps.clickByText(text);
+    }
+
+    @When("^(?:I will )?long press ((?:\"[^\"]*\")+)$")
+    public void longPressByText(String text) {
+        commonSteps.longPressByText(text);
     }
 
     @When("^(?:I will )?see ((?:\"[^\"]*\")+)$")

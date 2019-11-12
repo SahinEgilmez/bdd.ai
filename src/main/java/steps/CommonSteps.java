@@ -1,14 +1,20 @@
 package steps;
 
+import io.appium.java_client.MobileDriver;
+import io.appium.java_client.MobileElement;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.touch.WaitOptions;
 import io.appium.java_client.touch.offset.PointOption;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.interactions.touch.TouchActions;
 import settings.AIDriver;
 
 import java.net.MalformedURLException;
+import java.time.Duration;
 import java.util.logging.Logger;
 
+import static io.appium.java_client.touch.LongPressOptions.longPressOptions;
+import static io.appium.java_client.touch.offset.ElementOption.element;
 import static java.time.Duration.ofMillis;
 
 /**
@@ -34,8 +40,15 @@ public class CommonSteps {
         aiDriver.androidDriver.findElementByXPath("//*[@text='" + text.replace("\"", "") + "']").click();
     }
 
+    public void longPressByText(String text) {
+        MobileElement elem = (MobileElement) aiDriver.androidDriver.findElementByXPath("//*[@text='" + text.replace("\"", "") + "']");
+        new TouchAction(aiDriver.androidDriver).longPress(PointOption.point(elem.getCoordinates().onPage()))
+                .waitAction(WaitOptions.waitOptions(ofMillis(2000)))
+                .release().perform();
+    }
+
     public void seeByText(String text) throws Exception {
-        if(!aiDriver.androidDriver.findElementByXPath("//*[@text='" + text.replace("\"", "") + "']").isDisplayed())
+        if (!aiDriver.androidDriver.findElementByXPath("//*[@text='" + text.replace("\"", "") + "']").isDisplayed())
             throw new Exception("Text element is unvisible, but we expected it is.");
     }
 
