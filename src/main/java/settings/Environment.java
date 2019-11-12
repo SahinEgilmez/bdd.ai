@@ -3,13 +3,15 @@ package settings;
 import com.google.gson.JsonArray;
 
 public class Environment {
-    String type;
-    String appPath;
-    String appPackage;
-    String appActivity;
-    Double testaiConfidenceThreshold;
-    Double imageMatchThreshold;
-    Integer elementTimeout;
-    Double platformVersion;
-    JsonArray devices;
+    public String type;
+    public String appPath;
+    public String appPackage;
+    public String appActivity;
+    public Double testaiConfidenceThreshold;
+    public Double imageMatchThreshold;
+    public Integer baseScreenWidth;
+    public Integer baseScreenHeight;
+    public Integer elementTimeout;
+    public Double platformVersion;
+    public JsonArray devices;
 }
