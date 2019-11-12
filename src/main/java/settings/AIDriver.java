@@ -24,9 +24,10 @@ public class AIDriver {
     public AndroidDriver androidDriver = null;
     private IOSDriver iosDriver = null;
     private static AIDriver instance = null;
+    public Environment environment;
 
     private AIDriver() throws MalformedURLException, NotImplementedException {
-        Environment environment = getEnvironment();
+        this.environment = getEnvironment();
         if (environment.type.toLowerCase().equals("android")) {
             androidInitializer(environment, 0);
         } else {
@@ -64,9 +65,6 @@ public class AIDriver {
         androidDriver = new AndroidDriver(appiumUrl, capabilities);
         androidDriver.manage().timeouts().implicitlyWait(environment.elementTimeout, TimeUnit.SECONDS);
         androidDriver.setSetting(Setting.IMAGE_MATCH_THRESHOLD, environment.imageMatchThreshold);
-        androidDriver.setSetting(Setting.FIX_IMAGE_TEMPLATE_SIZE, false);
-        androidDriver.setSetting(Setting.UPDATE_IMAGE_ELEMENT_POSITION, true);
-        androidDriver.setSetting(Setting.FIX_IMAGE_FIND_SCREENSHOT_DIMENSIONS, false);
     }
 
     private Environment getEnvironment() {
