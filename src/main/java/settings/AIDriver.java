@@ -71,7 +71,7 @@ public class AIDriver {
         JsonObject settings;
         Environment environment = null;
         try {
-            FileReader fileReader = new FileReader("ai-config/settings.json");
+            FileReader fileReader = new FileReader("bdd-config/settings.json");
             Gson gson = new Gson();
             settings = JsonParser.parseReader(fileReader).getAsJsonObject();
             environment = gson.fromJson(settings.getAsJsonObject("environments").get("mobile"), Environment.class);

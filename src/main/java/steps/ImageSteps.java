@@ -43,7 +43,7 @@ public class ImageSteps {
     }
 
     public MobileElement seeByImage(String elementKey) throws Exception {
-        String path = "ai-config/images/" + elementKey.replace(" ", "_") + ".png";
+        String path = "bdd-config/images/" + elementKey.replace(" ", "_") + ".png";
         MobileElement element = (MobileElement) aiDriver.androidDriver.findElementByImage(getReferenceImageB64(path));
         if (element.isDisplayed())
             return element;
@@ -123,7 +123,7 @@ public class ImageSteps {
         // Crop the entire page screenshot to get only element screenshot
         BufferedImage eleScreenshot = fullImg.getSubimage(point.getX(), point.getY(), eleWidth, eleHeight);
         ImageIO.write(eleScreenshot, "png", screenshot);
-        File screenshotCropped = new File("ai-config/images/" + elementKey + ".png");
+        File screenshotCropped = new File("bdd-config/images/" + elementKey + ".png");
         FileUtils.copyFile(screenshot, screenshotCropped);
         screenshot.delete();
 

@@ -5,18 +5,13 @@
       "appPath": "",
       "appPackage": "com.turkcell.bip",
       "appActivity": "com.turkcell.bip.ui.main.BiPActivity",
-      "testaiConfidenceThreshold": 0.2,
-      "imageMatchThreshold": 0.5,
+      "testaiConfidenceThreshold": 0.3,
+      "imageMatchThreshold": 0.4,
       "baseScreenWidth": 1080,
       "baseScreenHeight": 2160,
       "elementTimeout": 10,
       "devices": [
-        {
-          "name": "device_1",
-          "appiumURL": "http://127.0.0.1:4723/wd/hub",
-          "udid": "R4BBB17729506987",
-          "platformVersion": 7.0
-        }
+        {"name": "device_1", "appiumURL": "http://127.0.0.1:4723/wd/hub", "udid": "R4BBB17729506987", "platformVersion": 7.0 }
       ]
     }
   }
