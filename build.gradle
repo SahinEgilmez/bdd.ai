@@ -1,30 +1,36 @@
 plugins {
+    id 'java'
     id 'java-library'
-    id 'maven-publish'
     id 'signing'
+    id 'maven-publish'
+    id 'java-gradle-plugin'
 }
 
 group 'io.github.sahinegilmez'
-version = '0.1.1'
+version = '0.1.2'
 sourceCompatibility = 1.8
 
 repositories {
+    jcenter()
     mavenCentral()
     mavenLocal()
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile gradleApi()
+    compile group: 'junit', name: 'junit', version: '4.12'
     compile 'org.codehaus.groovy:groovy-all:2.3.11'
     compile group: 'io.appium', name: 'java-client', version: '7.2.0'
     compile group: 'io.cucumber', name: 'cucumber-core', version: '4.7.2'
     compile group: 'io.cucumber', name: 'cucumber-java', version: '4.7.2'
+    compile group: 'io.cucumber', name: 'cucumber-junit', version: '4.7.2'
     compile group: 'com.google.code.gson', name: 'gson', version: '2.8.6'
 }
 
 test {
     // show standard out and standard error of the test JVM(s) on the console
     testLogging.showStandardStreams = true
+    useJUnitPlatform()
 }
 
 task sourceJar(type: Jar) {
@@ -47,6 +53,15 @@ signing {
     sign configurations.archives
 }
 
+gradlePlugin {
+    plugins {
+        tester {
+            id = "bdd.ai.tester"
+            implementationClass = "api.BDDAIPlugin"
+        }
+    }
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -67,14 +82,12 @@ publishing {
                     extension = 'pom.asc'
                 }
             }
-
             artifact(sourceJar) {
                 classifier = 'sources'
             }
             artifact(javadocJar) {
                 classifier = 'javadoc'
             }
-
             // create the signed artifacts
             project.tasks.signArchives.signatureFiles.each {
                 artifact(it) {
@@ -87,6 +100,12 @@ publishing {
                     extension = 'jar.asc'
                 }
             }
+        }
+        pluginPublication(MavenPublication) {
+            from components.java
+            groupId project.group
+            artifactId "bdd.ai.tester"
+            version project.version
         }
     }
     repositories {
