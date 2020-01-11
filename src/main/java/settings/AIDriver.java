@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.MobileElement;
 import io.appium.java_client.Setting;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
@@ -20,9 +21,9 @@ import java.util.logging.Logger;
 
 public class AIDriver {
     private Logger LOGGER = Logger.getLogger(AIDriver.class.getName());
-    private AppiumDriver appiumDriver = null;
-    public AndroidDriver androidDriver = null;
-    private IOSDriver iosDriver = null;
+    private AppiumDriver<MobileElement> appiumDriver = null;
+    public AndroidDriver<MobileElement> androidDriver = null;
+    private IOSDriver<MobileElement> iosDriver = null;
     private static AIDriver instance = null;
     public Environment environment;
 
@@ -61,10 +62,14 @@ public class AIDriver {
         customFindModules.put("ai", "test-ai-classifier");
         capabilities.setCapability("customFindModules", customFindModules);
         capabilities.setCapability("shouldUseCompactResponses", false);
+        capabilities.setCapability("testaiFindMode", "object_detection");
+        capabilities.setCapability("testaiObjDetectionDebug", true);
+
         URL appiumUrl = new URL(device.get("appiumURL").getAsString());
         androidDriver = new AndroidDriver(appiumUrl, capabilities);
         androidDriver.manage().timeouts().implicitlyWait(environment.elementTimeout, TimeUnit.SECONDS);
         androidDriver.setSetting(Setting.IMAGE_MATCH_THRESHOLD, environment.imageMatchThreshold);
+
     }
 
     private Environment getEnvironment() {

@@ -6,6 +6,7 @@ import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Point;
+import org.openqa.selenium.interactions.Coordinates;
 import settings.AIDriver;
 
 import javax.imageio.ImageIO;
@@ -36,42 +37,55 @@ public class ImageSteps {
     }
 
     public void clickByImageWithThreshold(String elementKey, double threshold) throws Exception {
-        double oldThreshold = (double) aiDriver.androidDriver.getSettings().get("imageMatchThreshold");
-        aiDriver.androidDriver.setSetting(Setting.IMAGE_MATCH_THRESHOLD, threshold);
-        clickByImage(elementKey);
-        aiDriver.androidDriver.setSetting(Setting.IMAGE_MATCH_THRESHOLD, oldThreshold);
+        double oldThreshold = setImageThreshold(threshold);
+        seeByImage(elementKey).click();
+        setImageThreshold(oldThreshold);
     }
 
     public MobileElement seeByImage(String elementKey) throws Exception {
-        String path = "bdd-config/images/" + elementKey.replace(" ", "_") + ".png";
-        MobileElement element = (MobileElement) aiDriver.androidDriver.findElementByImage(getReferenceImageB64(path));
-        if (element.isDisplayed())
-            return element;
-        else
-            throw new Exception("NOT FOUND IMAGE");
+        String path = "bdd-config"+File.separator+"images"+File.separator + elementKey.replace(" ", "_") + ".png";
+        int timeout = aiDriver.environment.elementTimeout;
+        long tStart = System.currentTimeMillis();
+        double elapsedSeconds;
+        do {
+            try {
+                MobileElement element = (MobileElement) aiDriver.androidDriver.findElementByImage(getReferenceImageB64(path));
+                if (element != null && element.isDisplayed())
+                    return element;
+            } catch (Exception e) {
+                LOGGER.info("Ignored exception: " + e.getMessage().split("\n")[0]+"...");
+            }
+            elapsedSeconds = (System.currentTimeMillis() - tStart) / 1000.0;
+        } while (!(elapsedSeconds >= timeout));
+        throw new Exception("I cannot see image element:" + elementKey);
     }
 
     public void seeByImageWithThreshold(String elementKey, double threshold) throws Exception {
-        double oldThreshold = (double) aiDriver.androidDriver.getSettings().get("imageMatchThreshold");
-        aiDriver.androidDriver.setSetting(Setting.IMAGE_MATCH_THRESHOLD, threshold);
+        double oldThreshold = setImageThreshold(threshold);
         seeByImage(elementKey);
-        aiDriver.androidDriver.setSetting(Setting.IMAGE_MATCH_THRESHOLD, oldThreshold);
+        setImageThreshold(oldThreshold);
     }
 
     public void notSeeByImage(String elementKey) throws Exception {
         try {
             seeByImage(elementKey);
         } catch (Exception e) {
+            LOGGER.info("Expected result: I didn't see " + elementKey + ".png");
             return;
         }
         throw new Exception("The element is visible, but we expected it not to.");
     }
 
     public void notSeeByImageWithThreshold(String elementKey, double threshold) throws Exception {
-        double oldThreshold = (double) aiDriver.androidDriver.getSettings().get("imageMatchThreshold");
-        aiDriver.androidDriver.setSetting(Setting.IMAGE_MATCH_THRESHOLD, threshold);
+        double oldThreshold = setImageThreshold(threshold);
         notSeeByImage(elementKey);
-        aiDriver.androidDriver.setSetting(Setting.IMAGE_MATCH_THRESHOLD, oldThreshold);
+        setImageThreshold(oldThreshold);
+    }
+
+    private double setImageThreshold(double threshold) {
+        double oldThreshold = (double) (aiDriver.androidDriver).getSettings().get("imageMatchThreshold");
+        aiDriver.androidDriver.setSetting(Setting.IMAGE_MATCH_THRESHOLD, threshold);
+        return oldThreshold;
     }
 
     private String getReferenceImageB64(String path) throws IOException {
@@ -106,24 +120,24 @@ public class ImageSteps {
         return newFilePNG;
     }
 
-    public File getSSByElement(String elementKey, String by, String key) throws IOException {
+    public File getSSByElement(String imageName, String by, String elementKey) throws IOException {
         MobileElement element = null;
-        key = key.replace("\"", "");
+        elementKey = elementKey.replace("\"", "");
         if (by.equals("id"))
-            element = (MobileElement) aiDriver.androidDriver.findElement(By.id(key));
+            element = (MobileElement) aiDriver.androidDriver.findElement(By.id(elementKey));
         else if (by.equals("xpath")) {
-            element = (MobileElement) aiDriver.androidDriver.findElement(By.xpath(key));
+            element = (MobileElement) aiDriver.androidDriver.findElement(By.xpath(elementKey));
         }
 
         File screenshot = (aiDriver.androidDriver).getScreenshotAs(OutputType.FILE);
         BufferedImage fullImg = ImageIO.read(screenshot);
-        Point point = element.getLocation();
+        Coordinates point = element.getCoordinates();
         int eleWidth = element.getSize().getWidth();
         int eleHeight = element.getSize().getHeight();
         // Crop the entire page screenshot to get only element screenshot
-        BufferedImage eleScreenshot = fullImg.getSubimage(point.getX(), point.getY(), eleWidth, eleHeight);
+        BufferedImage eleScreenshot = fullImg.getSubimage(point.onPage().getX(), point.onPage().getY(), eleWidth, eleHeight);
         ImageIO.write(eleScreenshot, "png", screenshot);
-        File screenshotCropped = new File("bdd-config/images/" + elementKey + ".png");
+        File screenshotCropped = new File("bdd-config/images/" + imageName + ".png");
         FileUtils.copyFile(screenshot, screenshotCropped);
         screenshot.delete();
 
