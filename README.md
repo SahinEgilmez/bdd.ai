@@ -16,44 +16,42 @@ With BDD.AI, tests can be run in parallel. Test results can be viewed and analyz
 
 For the effective use of the library, the following software must be installed.
 
-###appium
+### appium
 
 Appium installation is required for BDD.AI. You can access the installation document from the following link:
 
 * http://appium.io/docs/en/about-appium/getting-started/#installation-via-npm
 
-###opencv4nodejs
+### opencv4nodejs
 
 BDD.AI uses OpenCV for Image Processing. You can access the installation document from the following link:
 
 * https://github.com/justadudewhohacks/opencv4nodejs#how-to-install
 
-###test.ai appium classifier plugin
+### test.ai appium classifier plugin
 
 BDD.AI uses the test.ai plugin. You can access the installation document from the following link:
 
 * https://github.com/testdotai/appium-classifier-plugin#system-setup
 
-###allure framework
+### allure framework
 
 BDD.AI uses the Allure Framework to report test results. You can access the installation document from the following link:
 
 * https://docs.qameta.io/allure/#_installing_a_commandline
 
 ## Documentation
-To use BDD.AI, the latest version of the library must be added to the build.gradle file. Ayrıca testRunner isimli bir görevi aşağıdaki şekilde tanımlamalısınız:* 
-*
-    ```groovy
+To use BDD.AI, the latest version of the library must be added to the build.gradle file. Ayrıca testRunner isimli bir görevi aşağıdaki şekilde tanımlamalısınız: 
+
+```groovy
   dependencies {
-      ...
       implementation 'io.github.sahinegilmez:bdd.ai:1.0.0'
-      ...
   }
   task testRunner(type: JavaExec) {
         classpath = sourceSets.main.runtimeClasspath
         main = "runner.BDDRunner"
   }
-    ```
+```
 
 
 'bdd-config' 'bdd-config/images/' 'bdd-config/settings.json' must be added to the project correctly.
