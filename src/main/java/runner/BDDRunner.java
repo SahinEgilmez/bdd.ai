@@ -1,16 +1,37 @@
 package runner;
 
-import io.cucumber.junit.CucumberOptions;
-import io.cucumber.junit.Cucumber;
+import cucumber.runtime.Env;
 import io.cucumber.core.cli.Main;
-import org.junit.runner.RunWith;
-import org.junit.runners.model.InitializationError;
+import org.apache.commons.io.FileUtils;
+import settings.Environment;
 
-//@RunWith(Cucumber.class)
-//@CucumberOptions(features = "src/test/resources", glue = "steps", tags ={"@tag"})
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.concurrent.TimeUnit;
+
 public class BDDRunner {
-    public static void main(String[] args) {
-        String[] arg = {"--plugin", "pretty", "--glue", "steps","--tags","@featureTag", "src/test/resources"};
-        Main.run(arg,ClassLoader.getSystemClassLoader());
+    public static void main(String[] args) throws IOException {
+        FileUtils.deleteDirectory(new File("test-results"));
+        FileUtils.deleteDirectory(new File("test-report"));
+
+        String[] arg = {"--plugin", "io.qameta.allure.cucumber4jvm.AllureCucumber4Jvm", "--glue", "steps",
+                "--tags", Environment.getInstance().tags, "--threads", Environment.getInstance().threadCount.toString(),
+                "src/test/resources"};
+        Main.run(arg, ClassLoader.getSystemClassLoader());
+
+        Files.move(new File("allure-results").toPath(), new File( "test-results").toPath(),
+                StandardCopyOption.REPLACE_EXISTING);
+        try {
+            Runtime rt = Runtime.getRuntime();
+            Process pr = rt.exec("allure generate test-results -o test-report");
+            if(pr.waitFor()==0 && Environment.getInstance().quickReport){
+                Process pr2 = rt.exec("allure open test-report");
+                pr2.waitFor(3, TimeUnit.SECONDS);
+            }
+        }catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -5,9 +5,8 @@ import io.appium.java_client.Setting;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
-import org.openqa.selenium.Point;
 import org.openqa.selenium.interactions.Coordinates;
-import settings.AIDriver;
+import settings.BDDDriver;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -20,15 +19,15 @@ import java.util.Base64;
 import java.util.Random;
 import java.util.logging.Logger;
 
-/**
+/**we
  * @author segilmez: Sahin Egilmez
  */
 public class ImageSteps {
     private Logger LOGGER = Logger.getLogger(ImageSteps.class.getName());
-    public AIDriver aiDriver;
+    public BDDDriver BDDDriver;
 
-    public ImageSteps() throws MalformedURLException {
-        aiDriver = AIDriver.getInstance();
+    public ImageSteps(BDDDriver bddDriver) throws MalformedURLException {
+        BDDDriver = bddDriver;
     }
 
     public void clickByImage(String elementKey) throws Exception {
@@ -43,13 +42,17 @@ public class ImageSteps {
     }
 
     public MobileElement seeByImage(String elementKey) throws Exception {
+        int timeout = BDDDriver.environment.elementTimeout;
+        return seeByImageNSeconds(elementKey, timeout);
+    }
+
+    public MobileElement seeByImageNSeconds(String elementKey, double timeout) throws Exception {
         String path = "bdd-config"+File.separator+"images"+File.separator + elementKey.replace(" ", "_") + ".png";
-        int timeout = aiDriver.environment.elementTimeout;
         long tStart = System.currentTimeMillis();
         double elapsedSeconds;
         do {
             try {
-                MobileElement element = (MobileElement) aiDriver.androidDriver.findElementByImage(getReferenceImageB64(path));
+                MobileElement element = BDDDriver.androidDriver.findElementByImage(getReferenceImageB64(path));
                 if (element != null && element.isDisplayed())
                     return element;
             } catch (Exception e) {
@@ -83,8 +86,8 @@ public class ImageSteps {
     }
 
     private double setImageThreshold(double threshold) {
-        double oldThreshold = (double) (aiDriver.androidDriver).getSettings().get("imageMatchThreshold");
-        aiDriver.androidDriver.setSetting(Setting.IMAGE_MATCH_THRESHOLD, threshold);
+        double oldThreshold = (double) (BDDDriver.androidDriver).getSettings().get("imageMatchThreshold");
+        BDDDriver.androidDriver.setSetting(Setting.IMAGE_MATCH_THRESHOLD, threshold);
         return oldThreshold;
     }
 
@@ -96,10 +99,10 @@ public class ImageSteps {
     }
 
     private File resizeBaseImage(File baseImg) throws IOException {
-        double screenWidth = aiDriver.environment.baseScreenWidth;
-        double screenHeight = aiDriver.environment.baseScreenHeight;
-        double width = aiDriver.androidDriver.manage().window().getSize().getWidth();
-        double height = aiDriver.androidDriver.manage().window().getSize().getHeight();
+        double screenWidth = BDDDriver.environment.baseScreenWidth;
+        double screenHeight = BDDDriver.environment.baseScreenHeight;
+        double width = BDDDriver.androidDriver.manage().window().getSize().getWidth();
+        double height = BDDDriver.androidDriver.manage().window().getSize().getHeight();
         int newWidth = (int) ((width / screenWidth) * ImageIO.read(baseImg).getWidth());
         int newHeight = (int) ((height / screenHeight) * ImageIO.read(baseImg).getHeight());
         return resizeImage(baseImg, newWidth, newHeight);
@@ -124,12 +127,12 @@ public class ImageSteps {
         MobileElement element = null;
         elementKey = elementKey.replace("\"", "");
         if (by.equals("id"))
-            element = (MobileElement) aiDriver.androidDriver.findElement(By.id(elementKey));
+            element = (MobileElement) BDDDriver.androidDriver.findElement(By.id(elementKey));
         else if (by.equals("xpath")) {
-            element = (MobileElement) aiDriver.androidDriver.findElement(By.xpath(elementKey));
+            element = (MobileElement) BDDDriver.androidDriver.findElement(By.xpath(elementKey));
         }
 
-        File screenshot = (aiDriver.androidDriver).getScreenshotAs(OutputType.FILE);
+        File screenshot = (BDDDriver.androidDriver).getScreenshotAs(OutputType.FILE);
         BufferedImage fullImg = ImageIO.read(screenshot);
         Coordinates point = element.getCoordinates();
         int eleWidth = element.getSize().getWidth();
