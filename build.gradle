@@ -3,7 +3,6 @@ plugins {
     id 'java-library'
     id 'maven-publish'
     id 'signing'
-    //id "io.qameta.allure" version "2.8.1"
 }
 
 group 'io.github.sahinegilmez'
@@ -27,12 +26,6 @@ dependencies {
     compile 'io.cucumber:cucumber-junit:4.7.4'
     compile "io.qameta.allure:allure-cucumber4-jvm:2.13.1"
 }
-/*
-allure {
-    autoconfigure = true
-    version = '2.8.1'
-}
-*/
 task testRunner(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = "runner.BDDRunner"

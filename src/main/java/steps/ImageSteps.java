@@ -1,12 +1,12 @@
 package steps;
 
 import io.appium.java_client.MobileElement;
-import io.appium.java_client.Setting;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.interactions.Coordinates;
 import settings.BDDDriver;
+import settings.Environment;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -24,10 +24,10 @@ import java.util.logging.Logger;
  */
 public class ImageSteps {
     private Logger LOGGER = Logger.getLogger(ImageSteps.class.getName());
-    public BDDDriver BDDDriver;
+    public BDDDriver bddDriver;
 
     public ImageSteps(BDDDriver bddDriver) throws MalformedURLException {
-        BDDDriver = bddDriver;
+        this.bddDriver = bddDriver;
     }
 
     public void clickByImage(String elementKey) throws Exception {
@@ -42,7 +42,7 @@ public class ImageSteps {
     }
 
     public MobileElement seeByImage(String elementKey) throws Exception {
-        int timeout = BDDDriver.environment.elementTimeout;
+        int timeout = Environment.getInstance().elementTimeout;
         return seeByImageNSeconds(elementKey, timeout);
     }
 
@@ -52,7 +52,7 @@ public class ImageSteps {
         double elapsedSeconds;
         do {
             try {
-                MobileElement element = BDDDriver.androidDriver.findElementByImage(getReferenceImageB64(path));
+                MobileElement element = bddDriver.currentDriver().findElementByImage(getReferenceImageB64(path));
                 if (element != null && element.isDisplayed())
                     return element;
             } catch (Exception e) {
@@ -85,9 +85,9 @@ public class ImageSteps {
         setImageThreshold(oldThreshold);
     }
 
-    private double setImageThreshold(double threshold) {
-        double oldThreshold = (double) (BDDDriver.androidDriver).getSettings().get("imageMatchThreshold");
-        BDDDriver.androidDriver.setSetting(Setting.IMAGE_MATCH_THRESHOLD, threshold);
+    private double setImageThreshold(double threshold) throws Exception {
+        double oldThreshold = bddDriver.getImageMatchThreshold();
+        bddDriver.setImageMatchThreshold(threshold);
         return oldThreshold;
     }
 
@@ -99,10 +99,10 @@ public class ImageSteps {
     }
 
     private File resizeBaseImage(File baseImg) throws IOException {
-        double screenWidth = BDDDriver.environment.baseScreenWidth;
-        double screenHeight = BDDDriver.environment.baseScreenHeight;
-        double width = BDDDriver.androidDriver.manage().window().getSize().getWidth();
-        double height = BDDDriver.androidDriver.manage().window().getSize().getHeight();
+        double screenWidth = Environment.getInstance().baseScreenWidth;
+        double screenHeight = Environment.getInstance().baseScreenHeight;
+        double width = bddDriver.currentDriver().manage().window().getSize().getWidth();
+        double height = bddDriver.currentDriver().manage().window().getSize().getHeight();
         int newWidth = (int) ((width / screenWidth) * ImageIO.read(baseImg).getWidth());
         int newHeight = (int) ((height / screenHeight) * ImageIO.read(baseImg).getHeight());
         return resizeImage(baseImg, newWidth, newHeight);
@@ -127,12 +127,12 @@ public class ImageSteps {
         MobileElement element = null;
         elementKey = elementKey.replace("\"", "");
         if (by.equals("id"))
-            element = (MobileElement) BDDDriver.androidDriver.findElement(By.id(elementKey));
+            element = (MobileElement) bddDriver.currentDriver().findElement(By.id(elementKey));
         else if (by.equals("xpath")) {
-            element = (MobileElement) BDDDriver.androidDriver.findElement(By.xpath(elementKey));
+            element = (MobileElement) bddDriver.currentDriver().findElement(By.xpath(elementKey));
         }
 
-        File screenshot = (BDDDriver.androidDriver).getScreenshotAs(OutputType.FILE);
+        File screenshot = (bddDriver.currentDriver()).getScreenshotAs(OutputType.FILE);
         BufferedImage fullImg = ImageIO.read(screenshot);
         Coordinates point = element.getCoordinates();
         int eleWidth = element.getSize().getWidth();

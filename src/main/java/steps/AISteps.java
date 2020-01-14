@@ -2,6 +2,7 @@ package steps;
 
 import io.appium.java_client.MobileElement;
 import settings.BDDDriver;
+import settings.Environment;
 
 import java.net.MalformedURLException;
 import java.util.List;
@@ -12,14 +13,14 @@ import java.util.logging.Logger;
  */
 public class AISteps {
     private Logger LOGGER = Logger.getLogger(AISteps.class.getName());
-    public BDDDriver BDDDriver;
+    public BDDDriver bddDriver;
 
     public AISteps(BDDDriver bddDriver) throws MalformedURLException {
-        BDDDriver = bddDriver;
+        this.bddDriver = bddDriver;
     }
 
     public void seeByAI(String elementKey) throws Exception {
-        int timeout = BDDDriver.environment.elementTimeout;
+        int timeout = Environment.getInstance().elementTimeout;
         seeByAINSeconds(elementKey, timeout);
     }
 
@@ -27,7 +28,7 @@ public class AISteps {
         long tStart = System.currentTimeMillis();
         double elapsedSeconds;
         do {
-            MobileElement elem = BDDDriver.androidDriver.findElementByCustom("ai:" + elementKey);
+            MobileElement elem = bddDriver.currentDriver().findElementByCustom("ai:" + elementKey);
             if (elem != null) { //if elements exist
                 return;
             }
@@ -37,7 +38,7 @@ public class AISteps {
     }
 
     public void clickByAI(String elementKey) throws Exception {
-        int timeout = BDDDriver.environment.elementTimeout;
+        int timeout = Environment.getInstance().elementTimeout;
         clickByAINSeconds(elementKey, timeout);
     }
 
@@ -54,7 +55,7 @@ public class AISteps {
     }
 
     private int clickAIElements(String elementKey) {
-        List<MobileElement> elements = BDDDriver.androidDriver.findElements("-custom", "ai:" + elementKey);
+        List<MobileElement> elements = bddDriver.currentDriver().findElements("-custom", "ai:" + elementKey);
         for (MobileElement element : elements) {
             try {
                 element.click();

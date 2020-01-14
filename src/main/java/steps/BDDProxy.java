@@ -148,14 +148,6 @@ public class BDDProxy {
 
     @After(order = 2)
     public void embedScreenshot(Scenario scenario) {
-        if (scenario.isFailed()) {
-            try {
-                byte[] screenshot = ((TakesScreenshot) bddDriver.androidDriver)
-                        .getScreenshotAs(OutputType.BYTES);
-                scenario.embed(screenshot, "image/png");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        bddDriver.embedScreenshot(scenario);
     }
 }

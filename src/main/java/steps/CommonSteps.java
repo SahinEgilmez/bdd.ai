@@ -7,7 +7,6 @@ import io.appium.java_client.touch.offset.PointOption;
 import org.openqa.selenium.Dimension;
 import settings.BDDDriver;
 
-import java.net.MalformedURLException;
 import java.util.logging.Logger;
 
 import static io.appium.java_client.touch.offset.ElementOption.element;
@@ -18,14 +17,14 @@ import static java.time.Duration.ofMillis;
  */
 public class CommonSteps {
     private Logger LOGGER = Logger.getLogger(CommonSteps.class.getName());
-    public BDDDriver BDDDriver;
+    public BDDDriver bddDriver;
 
-    public CommonSteps(BDDDriver bddDriver) throws MalformedURLException {
-        BDDDriver = bddDriver;
+    public CommonSteps(BDDDriver bddDriver) {
+        this.bddDriver = bddDriver;
     }
 
     public void launchDevice(String alias) throws Exception {
-        BDDDriver.launchDevice(alias);
+        bddDriver.launchDevice(alias);
     }
 
     public static void waitForNSeconds(int seconds) {
@@ -37,18 +36,18 @@ public class CommonSteps {
     }
 
     public void clickByText(String text) {
-        BDDDriver.androidDriver.findElementByXPath("//*[@text='" + text.replace("\"", "") + "']").click();
+        bddDriver.currentDriver().findElementByXPath("//*[@text='" + text.replace("\"", "") + "']").click();
     }
 
     public void longPressByText(String text) {
-        MobileElement elem = (MobileElement) BDDDriver.androidDriver.findElementByXPath("//*[@text='" + text.replace("\"", "") + "']");
-        new TouchAction(BDDDriver.androidDriver).longPress(PointOption.point(elem.getCoordinates().onPage()))
+        MobileElement elem = (MobileElement) bddDriver.currentDriver().findElementByXPath("//*[@text='" + text.replace("\"", "") + "']");
+        new TouchAction(bddDriver.currentDriver()).longPress(PointOption.point(elem.getCoordinates().onPage()))
                 .waitAction(WaitOptions.waitOptions(ofMillis(2000)))
                 .release().perform();
     }
 
     public void seeByText(String text) throws Exception {
-        if (!BDDDriver.androidDriver.findElementByXPath("//*[@text='" + text.replace("\"", "") + "']").isDisplayed())
+        if (!bddDriver.currentDriver().findElementByXPath("//*[@text='" + text.replace("\"", "") + "']").isDisplayed())
             throw new Exception("Text element is unvisible, but we expected it is.");
     }
 
@@ -62,11 +61,11 @@ public class CommonSteps {
     }
 
     public void hideKeyboard() {
-        BDDDriver.androidDriver.hideKeyboard();
+        bddDriver.currentDriver().hideKeyboard();
     }
 
     public void sendKeys(String text) {
-        BDDDriver.androidDriver.getKeyboard().sendKeys(text);
+        bddDriver.currentDriver().getKeyboard().sendKeys(text);
     }
 
     public void swipe(String direction) throws Exception {
@@ -87,12 +86,12 @@ public class CommonSteps {
 
     private void swiper(double rateStartX, double rateEndX, double rateStartY, double rateEndY) {
         int startX, endX, startY, endY;
-        Dimension dimension = BDDDriver.androidDriver.manage().window().getSize();
+        Dimension dimension = bddDriver.currentDriver().manage().window().getSize();
         startX = (int) (dimension.getWidth() * rateStartX);
         endX = (int) (dimension.getWidth() * rateEndX);
         startY = (int) (dimension.getHeight() * rateStartY);
         endY = (int) (dimension.getHeight() * rateEndY);
-        new TouchAction(BDDDriver.androidDriver)
+        new TouchAction(bddDriver.currentDriver())
                 .press(PointOption.point(startX, startY))
                 .waitAction(WaitOptions.waitOptions(ofMillis(1500)))
                 .moveTo(PointOption.point(endX, endY))
