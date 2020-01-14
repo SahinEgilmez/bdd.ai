@@ -41,18 +41,17 @@ BDD.AI uses the Allure Framework to report test results. You can access the inst
 * https://docs.qameta.io/allure/#_installing_a_commandline
 
 ## Documentation
-To use BDD.AI, the latest version of the library must be added to the build.gradle file. Ayrıca testRunner isimli bir görevi aşağıdaki şekilde tanımlamalısınız: 
+To use BDD.AI, the latest version of the library must be added to the build.gradle file. You must also define a task called testRunner as follows: 
 
 ```groovy
   dependencies {
-      implementation 'io.github.sahinegilmez:bdd.ai:1.0.0'
+      implementation 'io.github.sahinegilmez:bdd.ai:0.2.0'
   }
   task testRunner(type: JavaExec) {
         classpath = sourceSets.main.runtimeClasspath
         main = "runner.BDDRunner"
   }
 ```
-
 
 'bdd-config' 'bdd-config/images/' 'bdd-config/settings.json' must be added to the project correctly.
 
