@@ -13,20 +13,19 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.util.Base64;
 import java.util.Random;
 import java.util.logging.Logger;
 
-/**we
+/**
  * @author segilmez: Sahin Egilmez
  */
 public class ImageSteps {
     private Logger LOGGER = Logger.getLogger(ImageSteps.class.getName());
     public BDDDriver bddDriver;
 
-    public ImageSteps(BDDDriver bddDriver) throws MalformedURLException {
+    public ImageSteps(BDDDriver bddDriver) {
         this.bddDriver = bddDriver;
     }
 

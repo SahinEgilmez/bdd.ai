@@ -7,24 +7,16 @@ import io.appium.java_client.touch.offset.PointOption;
 import org.openqa.selenium.Dimension;
 import settings.BDDDriver;
 
-import java.util.logging.Logger;
-
-import static io.appium.java_client.touch.offset.ElementOption.element;
 import static java.time.Duration.ofMillis;
 
 /**
  * @author segilmez
  */
 public class CommonSteps {
-    private Logger LOGGER = Logger.getLogger(CommonSteps.class.getName());
     public BDDDriver bddDriver;
 
     public CommonSteps(BDDDriver bddDriver) {
         this.bddDriver = bddDriver;
-    }
-
-    public void launchDevice(String alias) throws Exception {
-        bddDriver.launchDevice(alias);
     }
 
     public static void waitForNSeconds(int seconds) {
@@ -35,20 +27,33 @@ public class CommonSteps {
         }
     }
 
-    public void clickByText(String text) {
-        bddDriver.currentDriver().findElementByXPath("//*[@text='" + text.replace("\"", "") + "']").click();
+    public void clickByID(String id) {
+        bddDriver.currentDriver().findElementById(id).click();
+    }
+
+    public void seeByID(String id) {
+        bddDriver.currentDriver().findElementById(id);
+    }
+
+    public void clickByText(String text) throws Exception {
+        seeByText(text).click();
     }
 
     public void longPressByText(String text) {
+        waitForNSeconds(2);
         MobileElement elem = (MobileElement) bddDriver.currentDriver().findElementByXPath("//*[@text='" + text.replace("\"", "") + "']");
         new TouchAction(bddDriver.currentDriver()).longPress(PointOption.point(elem.getCoordinates().onPage()))
                 .waitAction(WaitOptions.waitOptions(ofMillis(2000)))
                 .release().perform();
     }
 
-    public void seeByText(String text) throws Exception {
-        if (!bddDriver.currentDriver().findElementByXPath("//*[@text='" + text.replace("\"", "") + "']").isDisplayed())
+    public MobileElement seeByText(String text) throws Exception {
+        waitForNSeconds(2);
+        text = text.replace("\"","");
+        MobileElement element =bddDriver.currentDriver().findElementByXPath("//*[@text=\"" + text + "\"]");
+        if (!element.isDisplayed())
             throw new Exception("Text element is unvisible, but we expected it is.");
+        return element;
     }
 
     public void notSeeByText(String text) throws Exception {
@@ -81,7 +86,6 @@ public class CommonSteps {
         } else {
             throw new Exception("Wrong direction!");
         }
-        LOGGER.info("SCROLL:" + direction);
     }
 
     private void swiper(double rateStartX, double rateEndX, double rateStartY, double rateEndY) {

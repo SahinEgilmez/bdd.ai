@@ -4,18 +4,15 @@ import io.appium.java_client.MobileElement;
 import settings.BDDDriver;
 import settings.Environment;
 
-import java.net.MalformedURLException;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * @author segilmez: Sahin Egilmez
  */
 public class AISteps {
-    private Logger LOGGER = Logger.getLogger(AISteps.class.getName());
     public BDDDriver bddDriver;
 
-    public AISteps(BDDDriver bddDriver) throws MalformedURLException {
+    public AISteps(BDDDriver bddDriver) {
         this.bddDriver = bddDriver;
     }
 

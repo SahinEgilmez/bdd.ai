@@ -11,12 +11,11 @@
       "baseScreenHeight": 2160,
       "elementTimeout": 10,
       "threadCount": 1,
-      "tags": "@scenarioTag1",
+      "tags": "@test1",
       "quickReport": false,
       "devices": [
-        {"name": "zenfone", "appiumURL": "http://127.0.0.1:4723/wd/hub", "systemPort":"5003", "udid": "J7AXB764E598E7B", "platformVersion": 9 },
-        {"name": "emulator_1", "appiumURL": "http://127.0.0.1:4724/wd/hub","systemPort":"5004", "udid": "emulator-5554", "platformVersion": 9 },
-        {"name": "emulator_2", "appiumURL": "http://127.0.0.1:4725/wd/hub","systemPort":"5005", "udid": "emulator-5556", "platformVersion": 9 }
+        {"name": "emulator_1", "appiumURL": "http://127.0.0.1:4723/wd/hub", "systemPort":"5023", "udid": "emulator-5554", "platformVersion": 9 },
+        {"name": "emulator_2", "appiumURL": "http://127.0.0.1:4733/wd/hub","systemPort":"5033", "udid": "emulator-5556", "platformVersion": 9 }
       ]
     }
   }

@@ -8,6 +8,7 @@ import io.appium.java_client.Setting;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 import io.cucumber.core.api.Scenario;
+import io.cucumber.java.hu.De;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -22,12 +23,21 @@ public class BDDDriver {
     private AndroidDriver<MobileElement> androidDriver = null;
     private IOSDriver<MobileElement> iosDriver = null;
     public Environment environment;
+    private String currentDeviceName;
 
     public BDDDriver() throws NotImplementedException {
         this.environment = Environment.getInstance();
     }
 
-    public void launchDevice(String deviceName) throws Exception {
+    public void launchDevice(String alias) throws Exception {
+        if (environment.type.toLowerCase().equals("android"))
+            launchAndroidDevice(alias);
+        else if (environment.type.toLowerCase().equals("ios"))
+            launchIOSDevice(alias);
+    }
+
+    public void launchAnyDevice() throws Exception {
+        String deviceName = Devices.getAvailableDevice();
         if (environment.type.toLowerCase().equals("android"))
             launchAndroidDevice(deviceName);
         else if (environment.type.toLowerCase().equals("ios"))
@@ -44,6 +54,7 @@ public class BDDDriver {
             }
         }
         if (device == null) throw new Exception("Device not found!");
+        currentDeviceName = device.get("name").getAsString();
 
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability("name", "BDD Test Automation");
@@ -52,12 +63,12 @@ public class BDDDriver {
         capabilities.setCapability("deviceName", device.get("udid").getAsString());
         capabilities.setCapability("udid", device.get("udid").getAsString());
         capabilities.setCapability("platformVersion", Environment.getInstance().platformVersion);
-        capabilities.setCapability("systemPort", device.get("systemPort").getAsString());
+        capabilities.setCapability("systemPort", device.get("systemPort").getAsInt());
         capabilities.setCapability("appPackage", environment.appPackage);
         capabilities.setCapability("appActivity", environment.appActivity);
         capabilities.setCapability("noReset", true);
         capabilities.setCapability("testaiConfidenceThreshold", environment.testaiConfidenceThreshold);
-        if (environment.appPath != null && environment.appPath.equals(""))
+        if (environment.appPath != null && !environment.appPath.equals(""))
             capabilities.setCapability("app", environment.appPath);
         HashMap<String, String> customFindModules = new HashMap<>();
         customFindModules.put("ai", "test-ai-classifier");
@@ -122,6 +133,7 @@ public class BDDDriver {
             iosDriver.quit();
             iosDriver = null;
         }
+        Devices.setDeviceAvailable(currentDeviceName);
     }
 
     public void embedScreenshot(Scenario scenario) {
