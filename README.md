@@ -55,7 +55,7 @@ To use BDD.AI, the latest version of the library must be added to the build.grad
 
 'bdd-config' 'bdd-config/images/' 'bdd-config/settings.json' must be added to the project correctly.
 
-You can access to sample project from [here](https://github.com/SahinEgilmez/bdd.ai).
+You can access to sample project from [here](https://github.com/SahinEgilmez/demo).
 
 That's it! You are now ready to use BDD.AI.
 
